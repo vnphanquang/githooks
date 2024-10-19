@@ -1,6 +1,6 @@
 {
 	"name": "@vnphanquang/githooks",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"exports": {
 		".": "./src/mod.ts",
 		"./bin": "./src/bin.ts",
@@ -17,7 +17,7 @@
 	},
 	"tasks": {
 		"init": "deno run --allow-read --allow-write=\".githooks\" --allow-run=\"git\" src/bin.ts init",
-		"test": "deno test --allow-read --allow-write --allow-run --allow-net --clean --coverage",
+		"test": "deno test -A --clean --coverage",
 		"coverage": "deno coverage --html",
 		"changesets": "deno run -A npm:@changesets/cli",
 		"ci:test": "deno test -A --clean --coverage=coverage",

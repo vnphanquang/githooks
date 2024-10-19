@@ -8,6 +8,7 @@ import { GIT_HOOKS, GITHOOKS_DIRNAME, GITHOOKS_UNDERSCORED_DIRNAME } from '../sr
 import { NotGitDirectoryError } from '../src/errors.ts';
 import { init } from '../src/init.ts';
 import { git } from '../src/git.ts';
+import { GITHOOKS_SCRIPT_NAME } from '../src/constants.ts';
 
 Deno.test({
 	name: 'run "init" in non-git directory',
@@ -193,6 +194,23 @@ Deno.test({
 	},
 });
 
+async function expectCommonCommit() {
+	// write
+	await Deno.writeTextFile('main.ts', 'console.log("hello")');
+
+	// add
+	const { success } = await git(Deno.cwd(), 'add', 'main.ts').output();
+	expect(success).toBe(true);
+
+	// commit
+	return await git(
+		Deno.cwd(),
+		'commit',
+		'-m',
+		'test pre-commit hook',
+	).output();
+}
+
 Deno.test({
 	name: 'git commit should trigger pre-commit hook',
 	permissions: {
@@ -207,21 +225,75 @@ Deno.test({
 			await expectCommonGitInit(Deno.cwd(), true);
 			await expectCommonInit(Deno.cwd());
 
+			const { success, stderr } = await expectCommonCommit();
+			expect(new TextDecoder().decode(stderr)).toContain('Checked 1 file');
+			expect(success).toBe(true);
+		} finally {
+			await sbox[Symbol.asyncDispose]();
+		}
+	},
+});
+
+Deno.test({
+	name: 'GITHOOKS=0 should skip hook',
+	permissions: {
+		read: true,
+		write: true,
+		run: true,
+		env: true,
+	},
+	async fn() {
+		await using sbox = await sandbox();
+
+		try {
+			await expectCommonGitInit(Deno.cwd(), true);
+			await expectCommonInit(Deno.cwd());
+
+			Deno.env.set('GITHOOKS', '0');
+			const { success, stderr } = await expectCommonCommit();
+			expect(new TextDecoder().decode(stderr)).not.toContain('Checked 1 file');
+			expect(success).toBe(true);
+		} finally {
+			await sbox[Symbol.asyncDispose]();
+			Deno.env.delete('GITHOOKS');
+		}
+	},
+});
+
+Deno.test({
+	name: 'unset GITHOOKS_CURRENT_HOOK should warn user',
+	permissions: {
+		read: true,
+		write: true,
+		run: true,
+		env: true,
+	},
+	async fn() {
+		await using sbox = await sandbox();
+
+		try {
+			await expectCommonGitInit(Deno.cwd(), true);
+			await expectCommonInit(Deno.cwd());
+
 			await Deno.writeTextFile('main.ts', 'console.log("hello")');
 
-			// add
-			const { success } = await git(Deno.cwd(), 'add', 'main.ts').output();
-			expect(success).toBe(true);
+			// overwrite pre-commit
+			const script = `\
+#!/usr/bin/env sh
+. "$(dirname "$0")/${GITHOOKS_SCRIPT_NAME}" $@
+`;
+			await Deno.writeTextFile(
+				path.join(Deno.cwd(), GITHOOKS_UNDERSCORED_DIRNAME, 'pre-commit'),
+				script,
+			);
 
-			// commit
-			const { success: commitSuccess, stderr } = await git(
-				Deno.cwd(),
-				'commit',
-				'-m',
-				'test pre-commit hook',
-			).output();
-			expect(new TextDecoder().decode(stderr)).toContain('Checked 1 file');
-			expect(commitSuccess).toBe(true);
+			const { success, stderr } = await expectCommonCommit();
+			const err = new TextDecoder().decode(stderr);
+			expect(err).toContain('Checked 1 file');
+			expect(err).toContain(
+				'unset GITHOOKS_CURRENT_HOOK. Hook may not function properly.',
+			);
+			expect(success).toBe(true);
 		} finally {
 			await sbox[Symbol.asyncDispose]();
 		}
