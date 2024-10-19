@@ -30,6 +30,9 @@ jobs:
         with:
           deno-version: v2.x
 
+      - name: Install node dependencies
+        run: 'deno install'
+
       - name: Run Tests
         run: 'deno task test'
 
