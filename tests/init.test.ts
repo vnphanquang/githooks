@@ -299,3 +299,46 @@ Deno.test({
 		}
 	},
 });
+
+Deno.test({
+	name: 'respect global init script from XDG_CONFIG_HOME env',
+	permissions: {
+		read: true,
+		write: true,
+		run: true,
+		env: true,
+	},
+	async fn() {
+		await using sbox = await sandbox();
+		const xdgConfigHome = Deno.env.get('XDG_CONFIG_HOME');
+		try {
+			const cwd = Deno.cwd();
+			await expectCommonGitInit(cwd, true);
+			await expectCommonInit(cwd);
+
+			const configPath = path.join(cwd, '.config');
+			Deno.env.set('XDG_CONFIG_HOME', configPath);
+			await Deno.mkdir(path.join(configPath, 'githooks'), { recursive: true });
+
+			const initScript = '\
+				#!/usr/bin/env sh\n\
+				export GITHOOKS=0\n\
+				echo "hello"\n\
+			';
+			await Deno.writeTextFile(path.join(configPath, 'githooks/init'), initScript);
+			const { success, stderr } = await expectCommonCommit();
+			const err = new TextDecoder().decode(stderr);
+			expect(err).not.toContain('Checked 1 file');
+			expect(err).toContain('hello');
+			expect(success).toBe(true);
+		} finally {
+			await sbox[Symbol.asyncDispose]();
+			if (xdgConfigHome) {
+				Deno.env.set('XDG_CONFIG_HOME', xdgConfigHome);
+			} else {
+				Deno.env.delete('XDG_CONFIG_HOME');
+			}
+		}
+	},
+});
+
