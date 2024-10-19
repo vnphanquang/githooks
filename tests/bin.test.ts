@@ -1,10 +1,10 @@
 import { expect } from 'jsr:@std/expect';
 import * as path from 'jsr:@std/path/posix';
 
-import deno from './deno.json' with { type: 'json' };
+import deno from '../deno.json' with { type: 'json' };
 
 if (!import.meta.dirname) throw Error('import.meta.dirname is not defined');
-const binPath = path.join(import.meta.dirname, './bin.ts');
+const binPath = path.join(import.meta.dirname, '../src/bin.ts');
 
 const textDecoder = new TextDecoder();
 

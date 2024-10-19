@@ -1,4 +1,10 @@
 /**
+ * @module
+ *
+ * Constants in `@vnphanquang/githooks`
+ */
+
+/**
  * All git hook names. See [Git Hooks](https://git-scm.com/docs/githooks#_hooks)
  */
 export const GIT_HOOKS = [

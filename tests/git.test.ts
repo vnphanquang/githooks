@@ -2,8 +2,8 @@ import { expect } from 'jsr:@std/expect';
 
 import { sandbox } from '@lambdalisue/sandbox';
 
-import { GitHooksPathConfigError, NotGitDirectoryError } from './errors.ts';
-import { configureHooksPath, getGitRootDir } from './git.ts';
+import { GitHooksPathConfigError, NotGitDirectoryError } from '../src/errors.ts';
+import { configureHooksPath, getGitRootDir } from '../src/git.ts';
 
 async function expectCommonGitInit() {
 	const { success: gitInitSuccess } = await new Deno.Command('git', {

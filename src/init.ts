@@ -9,6 +9,26 @@ import {
 } from './constants.ts';
 import { configureHooksPath, getGitRootDir } from './git.ts';
 
+/**
+ * Set up the following:
+ *
+ * 1. `.githooks/pre-commit`: the pre-commit git hook that runs `deno lint`
+ * 2. `.githooks/_/`: internals for running hooks. Can safely be ignored
+ *
+ * @example Run `init` programmatically:
+ * ```ts
+ * import { init } from 'jsr:@vnphanquang/githooks';
+ *
+ * await import(Deno.cwd())
+ * ```
+ *
+ * @example Run `init` from the command line:
+ * ```sh
+ * deno run -A jsr:@vnphanquang/githooks init
+ * ```
+ *
+ * @param cwd - Current working directory
+ */
 export async function init(cwd: string = Deno.cwd()) {
 	const gitRootDir = await getGitRootDir(cwd);
 	const hooksDir = join(gitRootDir, GITHOOKS_DIRNAME);

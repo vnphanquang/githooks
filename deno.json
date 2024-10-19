@@ -3,8 +3,17 @@
 	"version": "1.0.0-next.0",
 	"exports": {
 		".": "./src/mod.ts",
+		".bin": "./src/bin.ts",
 		"./errors": "./src/errors.ts",
 		"./constants": "./src/constants.ts"
+	},
+	"publish": {
+		"include": [
+			"src/**/*.ts",
+			"README.md",
+			"LICENCE",
+			"deno.json"
+		]
 	},
 	"tasks": {
 		"init": "deno run --allow-read --allow-write=\".githooks\" --allow-run=\"git\" bin.ts init",

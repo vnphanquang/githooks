@@ -1,6 +1,18 @@
-import { init } from './src/init.ts';
-import { GitHooksError } from './src/errors.ts';
-import deno from './deno.json' with { type: 'json' };
+/**
+ * @module
+ *
+ * Entry point for `@vnphanquang/githooks` CLI
+ *
+ * To see the current version and what commands are available, run:
+ *
+ * ```bash
+ * deno run -A jsr:@vnphanquang/githooks
+ * ```
+ */
+
+import { init } from './init.ts';
+import { GitHooksError } from './errors.ts';
+import deno from '../deno.json' with { type: 'json' };
 
 type Command = 'init';
 

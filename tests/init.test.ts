@@ -4,9 +4,9 @@ import { stub } from 'jsr:@std/testing/mock';
 
 import { sandbox } from '@lambdalisue/sandbox';
 
-import { GIT_HOOKS, GITHOOKS_DIRNAME, GITHOOKS_UNDERSCORED_DIRNAME } from './constants.ts';
-import { NotGitDirectoryError } from './errors.ts';
-import { init } from './init.ts';
+import { GIT_HOOKS, GITHOOKS_DIRNAME, GITHOOKS_UNDERSCORED_DIRNAME } from '../src/constants.ts';
+import { NotGitDirectoryError } from '../src/errors.ts';
+import { init } from '../src/init.ts';
 
 Deno.test({
 	name: 'run "init" in non-git directory',

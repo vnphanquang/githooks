@@ -1,6 +1,6 @@
 # @vnphanquang/githooks
 
-Utility for setting up git hook - [husky] port in Deno
+Utility for setting up git hooks. A Deno port of [husky]
 
 > [!IMPORTANT]
 > Work in progress
