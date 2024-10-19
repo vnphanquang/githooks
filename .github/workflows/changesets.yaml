@@ -1,0 +1,52 @@
+name: Changesets
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".changeset/**"
+      - ".github/workflows/changesets.yaml"
+  workflow_dispatch:
+
+env:
+  CI: true
+jobs:
+  Version:
+    if: github.repository == 'vnphanquang/githooks' # prevents this action from running on forks
+    permissions:
+      contents: write # to create release (changesets/action)
+      pull-requests: write # to create pull request (changesets/action)
+      id-token: write # to publish to JSR
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Run Tests
+        run: "deno task test"
+
+      - name: Dry-run JSR publish
+        run: "deno publish --dry-run"
+
+      - name: Create release PR
+        uses: changesets/action@v1
+        with:
+          version: deno task changesets:version
+          commit: "chore(release): changesets versioning & publication"
+          title: "Changesets: Versioning & Publication"
+          createGithubReleases: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to JSR
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        run: "deno publish"

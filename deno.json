@@ -1,9 +1,9 @@
 {
 	"name": "@vnphanquang/githooks",
-	"version": "1.0.0-next.0",
+	"version": "1.0.0",
 	"exports": {
 		".": "./src/mod.ts",
-		".bin": "./src/bin.ts",
+		"./bin": "./src/bin.ts",
 		"./errors": "./src/errors.ts",
 		"./constants": "./src/constants.ts"
 	},
@@ -16,9 +16,11 @@
 		]
 	},
 	"tasks": {
-		"init": "deno run --allow-read --allow-write=\".githooks\" --allow-run=\"git\" bin.ts init",
+		"init": "deno run --allow-read --allow-write=\".githooks\" --allow-run=\"git\" src/bin.ts init",
 		"test": "deno test --allow-read --allow-write --allow-run --allow-net --clean --coverage",
-		"coverage": "deno coverage --html"
+		"coverage": "deno coverage --html",
+		"changesets": "deno run -A npm:@changesets/cli",
+		"changesets:version": "deno run -A npm:@changesets/cli version"
 	},
 	"fmt": {
 		"useTabs": true,
