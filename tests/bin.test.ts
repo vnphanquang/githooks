@@ -1,5 +1,6 @@
 import { expect } from 'jsr:@std/expect';
-import * as path from 'jsr:@std/path/posix';
+import * as pathPosix from 'jsr:@std/path/posix';
+import * as pathWindows from 'jsr:@std/path/windows';
 
 import { sandbox } from 'jsr:@lambdalisue/sandbox';
 
@@ -8,7 +9,10 @@ import { NotGitDirectoryError } from '../src/errors.ts';
 import { GITHOOKS_UNDERSCORED_DIRNAME } from '../src/constants.ts';
 
 if (!import.meta.dirname) throw Error('import.meta.dirname is not defined');
-const localBinPath = path.join(import.meta.dirname, '../src/bin.ts');
+let localBinPath = pathPosix.join(import.meta.dirname, '../src/bin.ts');
+if (Deno.build.os === 'windows') {
+	localBinPath = pathWindows.join(import.meta.dirname, '../src/bin.ts').replaceAll('/', '\\');
+}
 const remoteBinPath = 'jsr:@vnphanquang/githooks/bin';
 
 const textDecoder = new TextDecoder();
@@ -82,7 +86,7 @@ Deno.test({
 });
 
 Deno.test({
-	name: 'run local "githooks" with unsupported command arg',
+	name: 'run local "githooks init"',
 	permissions: {
 		read: true,
 		write: true,
@@ -101,7 +105,7 @@ Deno.test({
 			await new Deno.Command('git', { args: ['init'] }).output();
 			const { success, stderr } = await githooks(localBinPath, 'init');
 			if (!success) throw new Error(textDecoder.decode(stderr));
-			const lstat = await Deno.lstat(path.join(Deno.cwd(), GITHOOKS_UNDERSCORED_DIRNAME));
+			const lstat = await Deno.lstat(pathPosix.join(Deno.cwd(), GITHOOKS_UNDERSCORED_DIRNAME));
 			expect(lstat.isDirectory).toBe(true);
 		} finally {
 			await sbox[Symbol.asyncDispose]();
@@ -129,7 +133,7 @@ Deno.test({
 			await new Deno.Command('git', { args: ['init'] }).output();
 			const { success, stderr } = await githooks(remoteBinPath, 'init');
 			if (!success) throw new Error(textDecoder.decode(stderr));
-			const lstat = await Deno.lstat(path.join(Deno.cwd(), GITHOOKS_UNDERSCORED_DIRNAME));
+			const lstat = await Deno.lstat(pathPosix.join(Deno.cwd(), GITHOOKS_UNDERSCORED_DIRNAME));
 			expect(lstat.isDirectory).toBe(true);
 		} finally {
 			await sbox[Symbol.asyncDispose]();
