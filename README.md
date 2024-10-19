@@ -31,12 +31,12 @@ Utility for setting up git hooks. A Deno port of [husky]
    ```
 
 4. Optionally, add script as [deno task](https://docs.deno.com/runtime/reference/cli/task_runner/)
+	 to `deno.json`
 
    ```json
-   // deno.json
    {
        "tasks": {
-         "githooks": "deno run --allow-read="." --allow-write="./.githooks" --allow-run="git" jsr:@vnphanquang/githooks/bin init"
+         "githooks": "deno run --allow-read=\".\" --allow-write=\"./.githooks\" --allow-run=\"git\" jsr:@vnphanquang/githooks/bin init"
        }
    }
    ```
