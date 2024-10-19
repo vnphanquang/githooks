@@ -29,9 +29,21 @@ Deno.test({
 	},
 });
 
-async function expectCommonGitInit(cwd: string = Deno.cwd()) {
-	const { success: gitInitSuccess } = await git(cwd, 'init').output();
-	expect(gitInitSuccess).toBe(true);
+async function expectCommonGitInit(cwd: string = Deno.cwd(), config = false) {
+	let { success } = await git(cwd, 'init').output();
+	expect(success).toBe(true);
+
+	if (config) {
+		// configure git user
+		({ success } = await git(cwd, 'config', 'user.email', 'tester@example.com').output());
+		expect(success).toBe(true);
+		({ success } = await git(cwd, 'config', 'user.name', 'Deno Tester').output());
+		expect(success).toBe(true);
+
+		// skip gpg sign
+		({ success } = await git(cwd, 'config', 'commit.gpgsign', 'false').output());
+		expect(success).toBe(true);
+	}
 }
 
 const PRE_COMMIT_PATH = path.join(GITHOOKS_DIRNAME, 'pre-commit');
@@ -192,17 +204,13 @@ Deno.test({
 		await using sbox = await sandbox();
 
 		try {
-			await expectCommonGitInit();
-			await init();
+			await expectCommonGitInit(Deno.cwd(), true);
+			await expectCommonInit(Deno.cwd());
 
 			await Deno.writeTextFile('main.ts', 'console.log("hello")');
 
 			// add
-			let { success } = await git(Deno.cwd(), 'add', 'main.ts').output();
-			expect(success).toBe(true);
-
-			// skip gpg sign
-			({ success } = await git(Deno.cwd(), 'config', 'commit.gpgsign', 'false').output());
+			const { success } = await git(Deno.cwd(), 'add', 'main.ts').output();
 			expect(success).toBe(true);
 
 			// commit
@@ -210,10 +218,10 @@ Deno.test({
 				Deno.cwd(),
 				'commit',
 				'-m',
-				'initial commit',
+				'test pre-commit hook',
 			).output();
-			expect(commitSuccess).toBe(true);
 			expect(new TextDecoder().decode(stderr)).toContain('Checked 1 file');
+			expect(commitSuccess).toBe(true);
 		} finally {
 			await sbox[Symbol.asyncDispose]();
 		}

@@ -68,7 +68,7 @@ hook_script=$(dirname "$(dirname "$0")")/\${GITHOOKS_CURRENT_HOOK:-$(basename "$
 
 # source the global init script if any
 init_script="\${XDG_CONFIG_HOME:-$HOME/.config}/githooks/init"
-[ -f "$init_script" ] && source "$init_script"
+[ -f "$init_script" ] && . "$init_script"
 
 # skip if GITHOOKS_SKIP=0
 [ "$GITHOOKS" = "0" ] && echo "Found GITHOOKS=0. Skipping..." && exit 0
