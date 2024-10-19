@@ -52,7 +52,9 @@ export async function init(cwd: string = Deno.cwd()) {
 			throw err;
 		}
 		const file = await Deno.create(precommitPath);
-		await Deno.chmod(precommitPath, 0o755);
+		if (Deno.build.os !== 'windows') {
+			await Deno.chmod(precommitPath, 0o755);
+		}
 		file.write(new TextEncoder().encode('deno lint'));
 		file.close();
 	}
@@ -81,7 +83,9 @@ GITHOOKS_CURRENT_HOOK=${hook} . "$(dirname "$0")/${GITHOOKS_SCRIPT_NAME}" $@
 	// write hook.ts
 	const scriptPath = join(hooksUnderscoredDir, GITHOOKS_SCRIPT_NAME);
 	await Deno.writeTextFile(scriptPath, GITHOOKS_SCRIPT);
-	await Deno.chmod(scriptPath, 0o755);
+	if (Deno.build.os !== 'windows') {
+		await Deno.chmod(scriptPath, 0o755);
+	}
 
 	await configureHooksPath(cwd, hooksUnderscoredDir);
 }

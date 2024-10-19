@@ -59,7 +59,7 @@ async function expectCommonInit(gitRootDir: string, initFn: typeof init = init) 
 	for (const file of GENERAGED_FILES) {
 		const lstat = await Deno.lstat(path.join(gitRootDir, file));
 		expect(lstat.isFile).toBe(true);
-		if (file !== GITIGNORE_PATH) {
+		if (file !== GITIGNORE_PATH && Deno.build.os !== 'windows') {
 			expect(lstat.mode).not.toBeNull();
 			expect((lstat.mode ?? 0) & 0o777).toBe(0o755);
 		}

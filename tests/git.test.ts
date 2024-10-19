@@ -1,4 +1,5 @@
 import { expect } from 'jsr:@std/expect';
+import * as path from 'jsr:@std/path';
 
 import { sandbox } from 'jsr:@lambdalisue/sandbox';
 
@@ -43,7 +44,7 @@ Deno.test({
 		try {
 			await expectCommonGitInit();
 			const gitRootDir = await getGitRootDir(Deno.cwd());
-			expect(gitRootDir).toBe(Deno.cwd());
+			expect(path.toFileUrl(gitRootDir).toString()).toBe(path.toFileUrl(Deno.cwd()).toString());
 		} finally {
 			await sbox[Symbol.asyncDispose]();
 		}

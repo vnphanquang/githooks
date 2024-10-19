@@ -21,11 +21,9 @@ function githooks(localBinPath: string, ...args: string[]) {
 
 async function expectCommonGithooksNoArgs(binPath: string) {
 	const { success, stdout, code } = await githooks(binPath);
-	expect(success).toBe(true);
+	expect(textDecoder.decode(stdout)).toContain(`Usage: ${deno.name}`);
 	expect(code).toBe(0);
-
-	const out = textDecoder.decode(stdout);
-	expect(out).toContain(`Usage: ${deno.name}`);
+	expect(success).toBe(true);
 }
 
 Deno.test({
@@ -54,9 +52,9 @@ Deno.test({
 
 async function expectCommonGitHooksUnsupportedArgs(binPath: string) {
 	const { success, stderr, code } = await githooks(binPath, 'unsupported');
-	expect(success).toBe(false);
-	expect(code).toBe(128);
 	expect(textDecoder.decode(stderr)).toContain('"unsupported" command is not supported.');
+	expect(code).toBe(128);
+	expect(success).toBe(false);
 }
 
 Deno.test({
@@ -101,8 +99,8 @@ Deno.test({
 			}
 
 			await new Deno.Command('git', { args: ['init'] }).output();
-			const { success } = await githooks(localBinPath, 'init');
-			expect(success).toBe(true);
+			const { success, stderr } = await githooks(localBinPath, 'init');
+			if (!success) throw new Error(textDecoder.decode(stderr));
 			const lstat = await Deno.lstat(path.join(Deno.cwd(), GITHOOKS_UNDERSCORED_DIRNAME));
 			expect(lstat.isDirectory).toBe(true);
 		} finally {
@@ -129,8 +127,8 @@ Deno.test({
 			}
 
 			await new Deno.Command('git', { args: ['init'] }).output();
-			const { success } = await githooks(remoteBinPath, 'init');
-			expect(success).toBe(true);
+			const { success, stderr } = await githooks(remoteBinPath, 'init');
+			if (!success) throw new Error(textDecoder.decode(stderr));
 			const lstat = await Deno.lstat(path.join(Deno.cwd(), GITHOOKS_UNDERSCORED_DIRNAME));
 			expect(lstat.isDirectory).toBe(true);
 		} finally {
