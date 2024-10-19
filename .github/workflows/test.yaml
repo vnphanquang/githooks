@@ -13,7 +13,10 @@ on:
 jobs:
   Test:
     if: github.repository == 'vnphanquang/githooks' # prevents this action from running on forks
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
     timeout-minutes: 5
     steps:
       - name: Checkout repository
@@ -38,6 +41,8 @@ jobs:
       - name: Upload to Codecov
         uses: codecov/codecov-action@v4
         with:
-          os: ${{ runner.os }}
+          os: ${{ matrix.os }}
           files: ./coverage/lcov.info
+          fail_ci_if_error: true
+          flags: unittests
           token: ${{ secrets.CODECOV_TOKEN }}
