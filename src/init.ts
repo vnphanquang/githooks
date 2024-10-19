@@ -24,7 +24,7 @@ import { configureHooksPath, getGitRootDir } from './git.ts';
  *
  * @example Run `init` from the command line:
  * ```sh
- * deno run -A jsr:@vnphanquang/githooks init
+ * deno run -A jsr:@vnphanquang/githooks/bin init
  * ```
  *
  * @param cwd - Current working directory

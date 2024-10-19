@@ -15,14 +15,13 @@ Utility for setting up git hooks. A Deno port of [husky]
 2. Run setup script
 
    ```bash
-   deno run -A jsr:@vnphanquang/githooks init
+   deno run -A jsr:@vnphanquang/githooks/bin init
    ```
 
    Alternatively, run with verbose permissions **at project root**:
 
    ```bash
-   deno run --allow-read="." --allow-write"./.githooks" --allow-run="git" jsr:@vnphanquang/githooks
-    init
+   deno run --allow-read="." --allow-write"./.githooks" --allow-run="git" jsr:@vnphanquang/githooks/bin init
    ```
 
 3. Edit `./githooks/pre-commit` to your needs. Alternatively, you can create any git hook script by adding

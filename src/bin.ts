@@ -6,7 +6,7 @@
  * To see the current version and what commands are available, run:
  *
  * ```bash
- * deno run -A jsr:@vnphanquang/githooks
+ * deno run -A jsr:@vnphanquang/githooks/bin
  * ```
  */
 
