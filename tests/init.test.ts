@@ -2,7 +2,7 @@ import { expect } from 'jsr:@std/expect';
 import * as path from 'jsr:@std/path/posix';
 import { stub } from 'jsr:@std/testing/mock';
 
-import { sandbox } from '@lambdalisue/sandbox';
+import { sandbox } from 'jsr:@lambdalisue/sandbox';
 
 import { GIT_HOOKS, GITHOOKS_DIRNAME, GITHOOKS_UNDERSCORED_DIRNAME } from '../src/constants.ts';
 import { NotGitDirectoryError } from '../src/errors.ts';

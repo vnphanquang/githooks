@@ -1,6 +1,6 @@
 import { expect } from 'jsr:@std/expect';
 
-import { sandbox } from '@lambdalisue/sandbox';
+import { sandbox } from 'jsr:@lambdalisue/sandbox';
 
 import { GitHooksPathConfigError, NotGitDirectoryError } from '../src/errors.ts';
 import { configureHooksPath, getGitRootDir } from '../src/git.ts';

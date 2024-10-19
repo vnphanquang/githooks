@@ -29,11 +29,5 @@
 		"semiColons": true,
 		"singleQuote": true,
 		"proseWrap": "preserve"
-	},
-	"imports": {
-		"@lambdalisue/sandbox": "jsr:@lambdalisue/sandbox@^2.0.1",
-		"@std/expect": "jsr:@std/expect@^1.0.5",
-		"@std/path": "jsr:@std/path@^1.0.6",
-		"@std/testing": "jsr:@std/testing@^1.0.3"
 	}
 }
