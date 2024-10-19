@@ -1,5 +1,3 @@
-# @vnphanquang/githooks
-
 Utility for setting up git hooks. A Deno port of [husky]
 
 [![MIT][license.badge]][license] [![codecov][codecov.badge]][codecov] [![JSR][jsr.badge.package]][jsr.package] [![JSR][jsr.badge.score]][jsr.package]
@@ -21,7 +19,7 @@ Utility for setting up git hooks. A Deno port of [husky]
    Alternatively, run with verbose permissions **at project root**:
 
    ```bash
-   deno run --allow-read="." --allow-write"./.githooks" --allow-run="git" jsr:@vnphanquang/githooks/bin init
+   deno run --allow-read="." --allow-write="./.githooks" --allow-run="git" jsr:@vnphanquang/githooks/bin init
    ```
 
 3. Edit `./githooks/pre-commit` to your needs. Alternatively, you can create any git hook script by adding
@@ -32,8 +30,19 @@ Utility for setting up git hooks. A Deno port of [husky]
     deno fmt
    ```
 
+4. Optionally, add script as [deno task](https://docs.deno.com/runtime/reference/cli/task_runner/)
+
+   ```json
+   // deno.json
+   {
+       "tasks": {
+         "githooks": "deno run --allow-read="." --allow-write="./.githooks" --allow-run="git" jsr:@vnphanquang/githooks/bin init"
+       }
+   }
+   ```
+
 > [!NOTE]
-> This library has been tested with [Deno 2](https://deno.com/blog/v2.0).
+> This library was written and tested in [Deno 2](https://deno.com/blog/v2.0).
 
 ## Usage as Library
 
