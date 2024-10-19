@@ -7,6 +7,7 @@ import { sandbox } from 'jsr:@lambdalisue/sandbox';
 import { GIT_HOOKS, GITHOOKS_DIRNAME, GITHOOKS_UNDERSCORED_DIRNAME } from '../src/constants.ts';
 import { NotGitDirectoryError } from '../src/errors.ts';
 import { init } from '../src/init.ts';
+import { git } from '../src/git.ts';
 
 Deno.test({
 	name: 'run "init" in non-git directory',
@@ -28,10 +29,8 @@ Deno.test({
 	},
 });
 
-async function expectCommonGitInit() {
-	const { success: gitInitSuccess } = await new Deno.Command('git', {
-		args: ['init'],
-	}).output();
+async function expectCommonGitInit(cwd: string = Deno.cwd()) {
+	const { success: gitInitSuccess } = await git(cwd, 'init').output();
 	expect(gitInitSuccess).toBe(true);
 }
 
@@ -182,4 +181,41 @@ Deno.test({
 	},
 });
 
-// TODO: test actual commit, expect pre-commit to run
+Deno.test({
+	name: 'git commit should trigger pre-commit hook',
+	permissions: {
+		read: true,
+		write: true,
+		run: true,
+	},
+	async fn() {
+		await using sbox = await sandbox();
+
+		try {
+			await expectCommonGitInit();
+			await init();
+
+			await Deno.writeTextFile('main.ts', 'console.log("hello")');
+
+			// add
+			let { success } = await git(Deno.cwd(), 'add', 'main.ts').output();
+			expect(success).toBe(true);
+
+			// skip gpg sign
+			({ success } = await git(Deno.cwd(), 'config', 'commit.gpgsign', 'false').output());
+			expect(success).toBe(true);
+
+			// commit
+			const { success: commitSuccess, stderr } = await git(
+				Deno.cwd(),
+				'commit',
+				'-m',
+				'initial commit',
+			).output();
+			expect(commitSuccess).toBe(true);
+			expect(new TextDecoder().decode(stderr)).toContain('Checked 1 file');
+		} finally {
+			await sbox[Symbol.asyncDispose]();
+		}
+	},
+});
