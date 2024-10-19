@@ -1,4 +1,4 @@
-import { join } from 'jsr:@std/path/posix';
+import { join } from 'jsr:@std/path@1/posix';
 
 import {
 	GIT_HOOKS,

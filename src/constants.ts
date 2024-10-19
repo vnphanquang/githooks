@@ -54,7 +54,7 @@ export const GITHOOKS_SCRIPT_NAME = 'hook.sh';
  * This is greatly inspired by [husky](https://github.com/typicode/husky).
  * The script content is similar to that of `husky`, but not identical
  */
-export const GITHOOKS_SCRIPT = `\
+export const GITHOOKS_SCRIPT: string = `\
 #!/usr/bin/env sh
 [ "$GITHOOKS" = "2" ] && set -x
 
