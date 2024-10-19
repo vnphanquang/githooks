@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.2
+
+### Patch Changes
+
+- [`c3f58f4`](https://github.com/vnphanquang/githooks/commit/c3f58f4de33f30672ed349fb7de4cb56248cc25d) Thanks [@vnphanquang](https://github.com/vnphanquang)! - change `source` to `.` to support support `sh`
+
+- [`e39ab72`](https://github.com/vnphanquang/githooks/commit/e39ab7291ee6936880b70604e8f030fa701d449f) Thanks [@vnphanquang](https://github.com/vnphanquang)! - add support for windows
+
 ## 1.0.1
 
 ### Patch Changes
