@@ -1,0 +1,28 @@
+{
+	"name": "@vnphanquang/githooks",
+	"version": "1.0.0-next.0",
+	"exports": {
+		".": "./src/mod.ts",
+		"./errors": "./src/errors.ts",
+		"./constants": "./src/constants.ts"
+	},
+	"tasks": {
+		"init": "deno run --allow-read --allow-write=\".githooks\" --allow-run=\"git\" bin.ts init",
+		"test": "deno test --allow-read --allow-write --allow-run --allow-net --clean --coverage",
+		"coverage": "deno coverage --html"
+	},
+	"fmt": {
+		"useTabs": true,
+		"lineWidth": 100,
+		"indentWidth": 2,
+		"semiColons": true,
+		"singleQuote": true,
+		"proseWrap": "preserve"
+	},
+	"imports": {
+		"@lambdalisue/sandbox": "jsr:@lambdalisue/sandbox@^2.0.1",
+		"@std/expect": "jsr:@std/expect@^1.0.5",
+		"@std/path": "jsr:@std/path@^1.0.6",
+		"@std/testing": "jsr:@std/testing@^1.0.3"
+	}
+}
