@@ -1,0 +1,44 @@
+name: Test
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  paths:
+    - "src/**"
+    - "tests/**"
+    - ".github/workflows/test.yaml"
+  workflow_dispatch:
+
+jobs:
+  Test:
+    if: github.repository == 'vnphanquang/githooks' # prevents this action from running on forks
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Lint
+        run: deno lint
+
+      - name: Run Tests
+        run: "deno task ci:test"
+
+      - name: Generate --lcov coverage
+        run: "deno task ci:coverage"
+
+      - name: Upload to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          os: ${{ runner.os }}
+          files: ./coverage/lcov.info
+          token: ${{ secrets.CODECOV_TOKEN }}
+

@@ -20,7 +20,6 @@ jobs:
     timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -40,7 +39,7 @@ jobs:
       - name: Create release PR
         uses: changesets/action@v1
         with:
-          version: deno task changesets:version
+          version: deno task ci:changesets
           commit: "chore(release): changesets versioning & publication"
           title: "Changesets: Versioning & Publication"
           createGithubReleases: true
