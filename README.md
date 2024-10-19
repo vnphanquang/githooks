@@ -10,7 +10,7 @@ Utility for setting up git hooks. A Deno port of [husky]
    git init
    ```
 
-2. Run setup script
+2. Run setup script:
 
    ```bash
    deno run -A jsr:@vnphanquang/githooks/bin init
@@ -19,11 +19,11 @@ Utility for setting up git hooks. A Deno port of [husky]
    Alternatively, run with verbose permissions **at project root**:
 
    ```bash
-   deno run --allow-read="." --allow-write="./.githooks" --allow-run="git" jsr:@vnphanquang/githooks/bin init
+   deno run --allow-read="." --allow-write=".githooks" --allow-run="git" jsr:@vnphanquang/githooks/bin init
    ```
 
 3. Edit `./githooks/pre-commit` to your needs. Alternatively, you can create any git hook script by adding
-   it to `.githooks/<your_hook>`. For example
+   it to `.githooks/<your_hook>`. For example:
 
    ```bash
    # .githooks/pre-push
@@ -31,12 +31,12 @@ Utility for setting up git hooks. A Deno port of [husky]
    ```
 
 4. Optionally, add script as [deno task](https://docs.deno.com/runtime/reference/cli/task_runner/)
-   to `deno.json`
+   to `deno.json`:
 
    ```json
    {
    	"tasks": {
-   		"githooks": "deno run --allow-read=\".\" --allow-write=\"./.githooks\" --allow-run=\"git\" jsr:@vnphanquang/githooks/bin init"
+   		"githooks": "deno run --allow-read=\".\" --allow-write=\".githooks\" --allow-run=\"git\" jsr:@vnphanquang/githooks/bin init"
    	}
    }
    ```
