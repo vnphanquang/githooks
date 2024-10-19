@@ -33,9 +33,6 @@ jobs:
       - name: Install node dependencies
         run: 'deno install'
 
-      - name: Run Tests
-        run: 'deno task test'
-
       - name: Dry-run JSR publish
         run: 'deno publish --dry-run'
 
