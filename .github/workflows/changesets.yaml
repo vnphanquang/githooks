@@ -4,8 +4,8 @@ on:
     branches:
       - main
     paths:
-      - ".changeset/**"
-      - ".github/workflows/changesets.yaml"
+      - '.changeset/**'
+      - '.github/workflows/changesets.yaml'
   workflow_dispatch:
 
 env:
@@ -31,21 +31,21 @@ jobs:
           deno-version: v2.x
 
       - name: Run Tests
-        run: "deno task test"
+        run: 'deno task test'
 
       - name: Dry-run JSR publish
-        run: "deno publish --dry-run"
+        run: 'deno publish --dry-run'
 
       - name: Create release PR
         uses: changesets/action@v1
         with:
           version: deno task ci:changesets
-          commit: "chore(release): changesets versioning & publication"
-          title: "Changesets: Versioning & Publication"
+          commit: 'chore(release): changesets versioning & publication'
+          title: 'Changesets: Versioning & Publication'
           createGithubReleases: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to JSR
         if: steps.changesets.outputs.hasChangesets == 'false'
-        run: "deno publish"
+        run: 'deno publish'

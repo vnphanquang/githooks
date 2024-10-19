@@ -4,9 +4,9 @@ on:
     branches:
       - main
     paths:
-      - "src/**"
-      - "tests/**"
-      - ".github/workflows/test.yaml"
+      - 'src/**'
+      - 'tests/**'
+      - '.github/workflows/test.yaml'
   pull_request:
   workflow_dispatch:
 
@@ -30,10 +30,10 @@ jobs:
         run: deno lint
 
       - name: Run Tests
-        run: "deno task ci:test"
+        run: 'deno task ci:test'
 
       - name: Generate --lcov coverage
-        run: "deno task ci:coverage"
+        run: 'deno task ci:coverage'
 
       - name: Upload to Codecov
         uses: codecov/codecov-action@v4
@@ -41,4 +41,3 @@ jobs:
           os: ${{ runner.os }}
           files: ./coverage/lcov.info
           token: ${{ secrets.CODECOV_TOKEN }}
-
