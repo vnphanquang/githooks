@@ -71,7 +71,7 @@ export async function init(cwd: string = Deno.cwd()) {
 		const hookPath = join(hooksUnderscoredDir, hook);
 		const script = `\
 #!/usr/bin/env sh
-GITHOOKS_CURRENT_HOOK=${hook} . "$(dirname "$0")/${GITHOOKS_SCRIPT_NAME}" $@
+GITHOOKS_TRIGGER=${hook} . "$(dirname "$0")/${GITHOOKS_SCRIPT_NAME}" $@
 `;
 		return Deno.writeTextFile(hookPath, script, {
 			create: true,

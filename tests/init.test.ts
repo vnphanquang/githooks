@@ -261,7 +261,7 @@ Deno.test({
 });
 
 Deno.test({
-	name: 'unset GITHOOKS_CURRENT_HOOK should warn user',
+	name: 'unset GITHOOKS_TRIGGER should warn user',
 	permissions: {
 		read: true,
 		write: true,
@@ -291,7 +291,7 @@ Deno.test({
 			const err = new TextDecoder().decode(stderr);
 			expect(err).toContain('Checked 1 file');
 			expect(err).toContain(
-				'unset GITHOOKS_CURRENT_HOOK. Hook may not function properly.',
+				'unset GITHOOKS_TRIGGER. Hook may not function properly.',
 			);
 			expect(success).toBe(true);
 		} finally {
@@ -323,7 +323,7 @@ Deno.test({
 			const initScript = '\
 				#!/usr/bin/env sh\n\
 				export GITHOOKS=0\n\
-				echo "Current hook is $GITHOOKS_CURRENT_HOOK"\n\
+				echo "Current hook is $GITHOOKS_TRIGGER"\n\
 			';
 			await Deno.writeTextFile(path.join(configPath, 'githooks/init'), initScript);
 			const { success, stderr } = await expectCommonCommit();

@@ -58,13 +58,13 @@ export const GITHOOKS_SCRIPT: string = `\
 #!/usr/bin/env sh
 [ "$GITHOOKS" = "2" ] && set -x
 
-hook_script=$(dirname "$(dirname "$0")")/\${GITHOOKS_CURRENT_HOOK:-$(basename "$0")}
+hook_script=$(dirname "$(dirname "$0")")/\${GITHOOKS_TRIGGER:-$(basename "$0")}
 
 # skip if hook has not been setup
 [ ! -f "$hook_script" ] && exit 0
 
-# warn if GITHOOKS_CURRENT_HOOK not set
-[ -z "$GITHOOKS_CURRENT_HOOK" ] && echo -e "\\e[33mWarning: unset GITHOOKS_CURRENT_HOOK. Hook may not function properly. Check "${GITHOOKS_UNDERSCORED_DIRNAME}/$(basename "$0")"\\e[0m"
+# warn if GITHOOKS_TRIGGER not set
+[ -z "$GITHOOKS_TRIGGER" ] && echo -e "\\e[33mWarning: unset GITHOOKS_TRIGGER. Hook may not function properly. Check "${GITHOOKS_UNDERSCORED_DIRNAME}/$(basename "$0")"\\e[0m"
 
 # source the global init script if any
 init_script="\${XDG_CONFIG_HOME:-$HOME/.config}/githooks/init"
