@@ -301,6 +301,40 @@ Deno.test({
 });
 
 Deno.test({
+	name: 'respect GITHOOKS=2 (debug mode)',
+	permissions: {
+		read: true,
+		write: true,
+		run: true,
+		env: true,
+	},
+	async fn() {
+		await using sbox = await sandbox();
+		const gitHooksEnv = Deno.env.get('GITHOOKS');
+		try {
+			const cwd = Deno.cwd();
+			await expectCommonGitInit(cwd, true);
+			await expectCommonInit(cwd);
+
+			Deno.env.set('GITHOOKS', '2');
+
+			const { success, stderr } = await expectCommonCommit();
+			const err = new TextDecoder().decode(stderr);
+			expect(err).toContain('Checked 1 file');
+			expect(err).toContain(`sh -e`);
+			expect(success).toBe(true);
+		} finally {
+			await sbox[Symbol.asyncDispose]();
+			if (gitHooksEnv) {
+				Deno.env.set('XDG_CONFIG_HOME', gitHooksEnv);
+			} else {
+				Deno.env.delete('XDG_CONFIG_HOME');
+			}
+		}
+	},
+});
+
+Deno.test({
 	name: 'respect global init script from XDG_CONFIG_HOME env',
 	permissions: {
 		read: true,
@@ -342,36 +376,65 @@ Deno.test({
 	},
 });
 
-Deno.test({
-	name: 'respect GITHOOKS=2 (debug mode)',
-	permissions: {
-		read: true,
-		write: true,
-		run: true,
-		env: true,
-	},
-	async fn() {
-		await using sbox = await sandbox();
-		const gitHooksEnv = Deno.env.get('GITHOOKS');
-		try {
-			const cwd = Deno.cwd();
-			await expectCommonGitInit(cwd, true);
-			await expectCommonInit(cwd);
-
-			Deno.env.set('GITHOOKS', '2');
-
-			const { success, stderr } = await expectCommonCommit();
-			const err = new TextDecoder().decode(stderr);
-			expect(err).toContain('Checked 1 file');
-			expect(err).toContain(`sh -e`);
-			expect(success).toBe(true);
-		} finally {
-			await sbox[Symbol.asyncDispose]();
-			if (gitHooksEnv) {
-				Deno.env.set('XDG_CONFIG_HOME', gitHooksEnv);
-			} else {
-				Deno.env.delete('XDG_CONFIG_HOME');
+if (Deno.env.get('CI') === 'true') {
+	// only run in CI to avoid interference
+	// with user's ~/.config/githooks/init
+	Deno.test({
+		name: 'respect global init script from home directory',
+		permissions: {
+			read: true,
+			write: true,
+			run: true,
+			env: true,
+		},
+		async fn() {
+			let initialInitScript: string | null = null;
+			let homePath = Deno.env.get('HOME');
+			if (!homePath && Deno.build.os === 'windows') {
+				homePath = Deno.env.get('USERPROFILE');
 			}
-		}
-	},
-});
+			const initScriptPath = path.join(homePath ?? '~/.config', '.config/githooks/init');
+			try {
+				initialInitScript = await Deno.readTextFile(initScriptPath);
+			} catch (err) {
+				if (!(err instanceof Deno.errors.NotFound)) {
+					throw err;
+				}
+			}
+
+			await using sbox = await sandbox();
+			try {
+				const cwd = Deno.cwd();
+				await expectCommonGitInit(cwd, true);
+				await expectCommonInit(cwd);
+
+				try {
+					await Deno.mkdir(path.dirname(initScriptPath), { recursive: true });
+				} catch (err) {
+					if (!(err instanceof Deno.errors.AlreadyExists)) {
+						throw err;
+					}
+				}
+				const initScript = '\
+					#!/usr/bin/env sh\n\
+					export GITHOOKS=0\n\
+					echo "Current hook is $GITHOOKS_TRIGGER"\n\
+					';
+				await Deno.writeTextFile(initScriptPath, initScript);
+
+				const { success, stderr } = await expectCommonCommit();
+				const err = new TextDecoder().decode(stderr);
+				expect(err).not.toContain('Checked 1 file');
+				expect(err).toContain('Current hook is pre-commit');
+				expect(success).toBe(true);
+			} finally {
+				await sbox[Symbol.asyncDispose]();
+				if (initialInitScript) {
+					await Deno.writeTextFile(initScriptPath, initialInitScript);
+				} else {
+					await Deno.remove(initScriptPath);
+				}
+			}
+		},
+	});
+}
