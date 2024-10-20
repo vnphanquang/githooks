@@ -10,6 +10,8 @@ on:
   pull_request:
   workflow_dispatch:
 
+env:
+  CI: true
 jobs:
   Test:
     if: github.repository == 'vnphanquang/githooks' # prevents this action from running on forks

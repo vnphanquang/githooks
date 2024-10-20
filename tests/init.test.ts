@@ -323,13 +323,13 @@ Deno.test({
 			const initScript = '\
 				#!/usr/bin/env sh\n\
 				export GITHOOKS=0\n\
-				echo "hello"\n\
+				echo "Current hook is $GITHOOKS_CURRENT_HOOK"\n\
 			';
 			await Deno.writeTextFile(path.join(configPath, 'githooks/init'), initScript);
 			const { success, stderr } = await expectCommonCommit();
 			const err = new TextDecoder().decode(stderr);
 			expect(err).not.toContain('Checked 1 file');
-			expect(err).toContain('hello');
+			expect(err).toContain('Current hook is pre-commit');
 			expect(success).toBe(true);
 		} finally {
 			await sbox[Symbol.asyncDispose]();
@@ -342,3 +342,36 @@ Deno.test({
 	},
 });
 
+Deno.test({
+	name: 'respect GITHOOKS=2 (debug mode)',
+	permissions: {
+		read: true,
+		write: true,
+		run: true,
+		env: true,
+	},
+	async fn() {
+		await using sbox = await sandbox();
+		const gitHooksEnv = Deno.env.get('GITHOOKS');
+		try {
+			const cwd = Deno.cwd();
+			await expectCommonGitInit(cwd, true);
+			await expectCommonInit(cwd);
+
+			Deno.env.set('GITHOOKS', '2');
+
+			const { success, stderr } = await expectCommonCommit();
+			const err = new TextDecoder().decode(stderr);
+			expect(err).toContain('Checked 1 file');
+			expect(err).toContain(`sh -e`);
+			expect(success).toBe(true);
+		} finally {
+			await sbox[Symbol.asyncDispose]();
+			if (gitHooksEnv) {
+				Deno.env.set('XDG_CONFIG_HOME', gitHooksEnv);
+			} else {
+				Deno.env.delete('XDG_CONFIG_HOME');
+			}
+		}
+	},
+});
