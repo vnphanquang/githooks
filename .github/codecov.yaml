@@ -1,0 +1,31 @@
+codecov:
+  branch: main
+coverage:
+  round: down
+  precision: 2
+flag_management:
+  default_rules:
+    carryforward: true
+    statuses:
+      - type: project
+        target: 90%
+      - type: patch
+        target: 100%
+component_management:
+  individual_components:
+    - component_id: init
+      name: init
+      paths:
+        - src/init.ts
+    - component_id: git
+      name: git
+      paths:
+        - src/git.ts
+    - component_id: constants
+      name: constants
+      paths:
+        - src/constants.ts
+    - component_id: errors
+      name: errors
+      paths:
+        - src/errors.ts
