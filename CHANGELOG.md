@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.3
+
+### Patch Changes
+
+- [`ac65ce9`](https://github.com/vnphanquang/githooks/commit/ac65ce9acfb62b3c8590261f3d0afc31bea9d686) Thanks [@vnphanquang](https://github.com/vnphanquang)! - escape to correct color marker in `hook.sh`
+
+- [`f72ec0d`](https://github.com/vnphanquang/githooks/commit/f72ec0dc5c79e87bb24251a00e4fc6118236f9b5) Thanks [@vnphanquang](https://github.com/vnphanquang)! - rename `GITHOOKS_CURRENT_HOOK` env to `GITHOOKS_TRIGGER`
+
 ## 1.0.2
 
 ### Patch Changes
