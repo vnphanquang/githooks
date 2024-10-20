@@ -141,7 +141,7 @@ fi
 ```
 
 > [!NOTE]
-> Within the setup script, you have access to the `GITHOOKS_TRIGGER` - the name
+> Within the setup script, you have access to the `GITHOOKS_TRIGGER` env - the name
 > of the hook that is about to run.
 
 ### Shell Debug Mode
