@@ -3,34 +3,30 @@ Utility for setting up git hooks. A Deno port of [husky]
 [![MIT][license.badge]][license] [![codecov][codecov.badge]][codecov] [![JSR][jsr.badge.package]][jsr.package] [![JSR][jsr.badge.score]][jsr.package]
 
 > [!NOTE]
-> This library was written and tested in [Deno 2](https://deno.com/blog/v2.0), It has also been
+> This library was written in [Deno 2](https://deno.com/blog/v2.0),
 > tested on Windows, MacOS, and Linux. See [code coverage](https://app.codecov.io/github/vnphanquang/githooks/flags?flags%5B0%5D=macos-latest&flags%5B1%5D=ubuntu-latest&flags%5B2%5D=windows-latest) for more information.
 
 ## Usage as CLI
 
-1. Make sure your project is within a git directory
+1. Make sure your project is within a git directory...
 
    ```bash
-   git init
+   git init .
    ```
 
-2. Run initialization script:
+2. Run initialization script...
 
    ```bash
    deno run -A jsr:@vnphanquang/githooks/bin init
    ```
 
-   > [!NOTE]
-   > `init` will search up and run at the nearest git root directory, if any, or fail otherwise.
-
-   Alternatively, run with verbose permissions **at project root**:
+   `init` will search up and run at the nearest git root directory, if any, or fail otherwise. Alternatively, run with verbose permissions **at project root**:
 
    ```bash
    deno run --allow-read="." --allow-write=".githooks" --allow-run="git" jsr:@vnphanquang/githooks/bin init
    ```
 
-3. Edit `./githooks/pre-commit` to your needs. Alternatively, you can create any git hook script by adding
-   it to `.githooks/<your_hook>`. For example:
+3. Edit `./githooks/pre-commit` to your needs. You can create, edit, or remove any git hook script `.githooks/<your_hook>`. For example:
 
    ```bash
    #!/usr/bin/env sh
@@ -39,7 +35,7 @@ Utility for setting up git hooks. A Deno port of [husky]
    # file: .githooks/pre-push
    ```
 
-4. Optionally, add script as [deno task](https://docs.deno.com/runtime/reference/cli/task_runner/).
+4. Optionally, add script as [Deno task](https://docs.deno.com/runtime/reference/cli/task_runner/).
    See [Running as Deno Task](#automatic-initialization-for-fresh-repository) for more information.
 
 ## Usage as Library
@@ -56,7 +52,7 @@ await init(Deno.cwd());
 
 ### Running as Deno Task
 
-It is helpful to save the script as a Deno task:
+It is helpful to save the script as a [Deno task](https://docs.deno.com/runtime/reference/cli/task_runner/):
 
 ```json
 {
@@ -81,11 +77,11 @@ For example, you can quickly add/update `pre-commit` by running:
 echo "npm test" > .githooks/pre-commit
 ```
 
-### (No) Automatic Initialization for Fresh Repository
+### (No) Automatic Initialization
 
 Unlike Node, Deno does not support pre- or post- script pattern.
 Prefer to [use Deno task](#running-as-deno-task) and include
-explicit instruction for your team to run it after each `git clone`.
+explicit instruction for your team to run it after each `git clone` or upgrade.
 
 ### Usage with [lint-staged]
 
@@ -97,6 +93,8 @@ deno run -A npm:lint-staged
 
 # file: .githooks/pre-commit
 ```
+
+As expected, this should look for any lint-staged config files at the project root. See [lint-staged configuration documentation](https://github.com/lint-staged/lint-staged?tab=readme-ov-file#configuration) for more information.
 
 ### Skipping Certain Hooks
 
@@ -154,11 +152,49 @@ scripts. Underneath, this run `set -x`.
 GITHOOKS=2 git commit -m "verbose run"
 ```
 
-## Prior Arts
+## Prior Arts & Acknowledgements
 
-This project is greatly inspired by [husky]; credits go to [@typicode](https://github.com/typicode). Please show support over there.
+### Comparison and Benchmark vs [husky]
 
-[Yakiyo/deno_hooks](https://github.com/Yakiyo/deno_hooks) is a similar project. Please show them some love too.
+This project is greatly inspired by [husky]; it is even fair to say this is a direct Deno port of `huksy` . Credits should go to [@typicode](https://github.com/typicode). Please show support over there. In fact, today, you can use `husky` directly in Deno:
+
+```bash
+deno run -A npm:husky
+```
+
+This project builds upon ideas from `husky` while trying to stay minimal and only extend on some functionality that satisfies my personal needs. It is also an attempt to utilize Deno for more explicit permissions and idiomatic testing (`husky` uses `bash` for tests, which is totally fine but simply not my preference).
+
+Regarding performance, both `npm:husky` and `jsr:@vnphanquang/githooks` are comparable, with `husky`
+being 1.02x to 1.05x faster, according to the benchmark of the `init` command run on my machine, as of #968d885:
+
+```text
+CPU | Intel(R) Core(TM) i5-4590 CPU @ 3.30GHz
+Runtime | Deno 2.0.2 (x86_64-unknown-linux-gnu)
+
+benchmark                   time/iter (avg)        iter/s      (min … max)           p75      p99     p995
+--------------------------- ----------------------------- --------------------- --------------------------
+group init
+npm:husky                            5.3 ms         187.6 (  5.0 ms …  14.7 ms)   5.3 ms   5.7 ms  14.7 ms
+jsr:@vnphanquang/githooks            5.4 ms         183.5 (  5.2 ms …   5.9 ms)   5.5 ms   5.8 ms   5.9 ms
+
+summary
+  npm:husky
+     1.02x faster than jsr:@vnphanquang/githooks
+```
+
+You can try the benchmark yourself by cloning the repository and running:
+
+```bash
+deno task bench
+```
+
+### Similar Projects
+
+Other projects with similar objective exists. Please show them some love too.
+
+- [Yakiyo/deno_hooks](https://github.com/Yakiyo/deno_hooks): also inspired by [husky], written in Deno 1; no tests have been implemented as of this writing.
+- [xCykrix/githooked](https://github.com/xCykrix/githooked): also inspired by [husky] but are likely
+  no longer maintained or has been migrated away from Deno towards a standalone shell script.
 
 [husky]: https://github.com/typicode/husky
 [deno]: https://deno.com/
