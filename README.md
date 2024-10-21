@@ -48,6 +48,10 @@ import { init } from 'jsr:@vnphanquang/githooks';
 await init(Deno.cwd());
 ```
 
+## Changelog
+
+See [CHANGELOG](https://github.com/vnphanquang/githooks/blob/main/CHANGELOG.md) for more information.
+
 ## Recipes
 
 ### Running as Deno Task
@@ -156,7 +160,7 @@ GITHOOKS=2 git commit -m "verbose run"
 
 ### Comparison and Benchmark vs [husky]
 
-This project is greatly inspired by [husky]; it is even fair to say this is a direct Deno port of `huksy` . Credits should go to [@typicode](https://github.com/typicode). Please show support over there. In fact, today, you can use `husky` directly in Deno:
+This project is greatly inspired by [husky]; it is even fair to consider this as a direct Deno port of `huksy` . Credits should go to [@typicode](https://github.com/typicode). Please show support over there. In fact, today, you can use `husky` directly in Deno:
 
 ```bash
 deno run -A npm:husky
@@ -164,37 +168,30 @@ deno run -A npm:husky
 
 This project builds upon ideas from `husky` while trying to stay minimal and only extend on some functionality that satisfies my personal needs. It is also an attempt to utilize Deno for more explicit permissions and idiomatic testing (`husky` uses `bash` for tests, which is totally fine but simply not my preference).
 
-Regarding performance, both `npm:husky` and `jsr:@vnphanquang/githooks` are comparable, with `husky`
-being 1.02x to 1.05x faster, according to the benchmark of the `init` command run on my machine, as of #968d885:
+Regarding performance, both `npm:husky` and `jsr:@vnphanquang/githooks` are comparable:
 
-```text
-CPU | Intel(R) Core(TM) i5-4590 CPU @ 3.30GHz
-Runtime | Deno 2.0.2 (x86_64-unknown-linux-gnu)
+- `npm:husky init` tends to run **~1.03x faster on linux** compared to `jsr:@vnphanquang/githooks`
+- `npm:husky init` tends to run **~1.10x slower on macos** compared to `jsr:@vnphanquang/githooks`
+- `npm:husky init` tends to run **as just fast on windows** compared to `jsr:@vnphanquang/githooks`
 
-benchmark                   time/iter (avg)        iter/s      (min … max)           p75      p99     p995
---------------------------- ----------------------------- --------------------- --------------------------
-group init
-npm:husky                            5.3 ms         187.6 (  5.0 ms …  14.7 ms)   5.3 ms   5.7 ms  14.7 ms
-jsr:@vnphanquang/githooks            5.4 ms         183.5 (  5.2 ms …   5.9 ms)   5.5 ms   5.8 ms   5.9 ms
-
-summary
-  npm:husky
-     1.02x faster than jsr:@vnphanquang/githooks
-```
-
-You can try the benchmark yourself by cloning the repository and running:
+The numbers above are simplified. See [benchmark runs](https://github.com/vnphanquang/githooks/actions/workflows/benchmark.yaml) for more details. You can try the benchmark on your own machine by cloning the project and running:
 
 ```bash
 deno task bench
 ```
+
+Benchmarks live at [benchmarks/*](https://github.com/vnphanquang/githooks/tree/main/benchmarks).
 
 ### Similar Projects
 
 Other projects with similar objective exists. Please show them some love too.
 
 - [Yakiyo/deno_hooks](https://github.com/Yakiyo/deno_hooks): also inspired by [husky], written in Deno 1; no tests have been implemented as of this writing.
-- [xCykrix/githooked](https://github.com/xCykrix/githooked): also inspired by [husky] but are likely
-  no longer maintained or has been migrated away from Deno towards a standalone shell script.
+- [xCykrix/githooked](https://github.com/xCykrix/githooked): also inspired by [husky], [originally written in Deno](https://www.reddit.com/r/Deno/comments/thfub7/githooked_the_deno_githook_handler_for_your/) but has likely been migrated away from Deno towards a standalone shell script, which is probably the most lightweight & cross-platform solution.
+
+## Contributing
+
+See [CONTRIBUTING](https://github.com/vnphanquang/githooks/blob/main/CONTRIBUTING.md) for more information.
 
 [husky]: https://github.com/typicode/husky
 [deno]: https://deno.com/
