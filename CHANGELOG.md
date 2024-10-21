@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.4
+
+### Patch Changes
+
+- [`4ac1222`](https://github.com/vnphanquang/githooks/commit/4ac122204a83039d9423fb48272d95fc6026845a) Thanks [@vnphanquang](https://github.com/vnphanquang)! - docs: add benchmark for `init` command against `husky`
+
+- [`1310334`](https://github.com/vnphanquang/githooks/commit/13103345041de890e61c038e033a79ddf9c05332) Thanks [@vnphanquang](https://github.com/vnphanquang)! - docs: fix typo, wording, and add more detailed comparison vs `husky`
+
 ## 1.0.3
 
 ### Patch Changes
