@@ -1,6 +1,6 @@
 Utility for setting up git hooks. A Deno port of [husky]
 
-[![MIT][license.badge]][license] [![codecov][codecov.badge]][codecov] [![JSR][jsr.badge.package]][jsr.package] [![JSR][jsr.badge.score]][jsr.package]
+[![JSR][jsr.badge.package]][jsr.package] [![JSR][jsr.badge.score]][jsr.package] [![MIT][license.badge]][license] [![codecov][codecov.badge]][codecov]
 
 > [!NOTE]
 > This library was written in [Deno 2](https://deno.com/blog/v2.0),
