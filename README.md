@@ -78,7 +78,7 @@ Simply add your [git hook](https://git-scm.com/docs/githooks#_hooks) script to `
 For example, you can quickly add/update `pre-commit` by running:
 
 ```bash
-echo "npm test" > .githooks/pre-commit
+echo "deno test" > .githooks/pre-commit
 ```
 
 ### (No) Automatic Initialization
