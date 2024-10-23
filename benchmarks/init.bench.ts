@@ -1,17 +1,10 @@
-import {
-	denoAddGithooks,
-	denoAddHusky,
-	githooksInit,
-	huskyInit,
-	initDenoAndGit,
-	sandbox,
-} from './utils.ts';
+import { denoAddGithooks, denoAddHusky, githooksInit, huskyInit, initDenoAndGit } from './utils.ts';
+import { sandbox } from '../tests/utils.ts';
 
 const GROUP = 'init';
 
 function wrap(fn: () => Promise<void>) {
-	return sandbox(async () => {
-		const cwd = Deno.cwd();
+	return sandbox(async (cwd) => {
 		await initDenoAndGit(cwd);
 		await fn();
 	});

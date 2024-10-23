@@ -2,8 +2,7 @@ import { expect } from 'jsr:@std/expect';
 import * as pathPosix from 'jsr:@std/path/posix';
 import * as pathWindows from 'jsr:@std/path/windows';
 
-import { sandbox } from 'jsr:@lambdalisue/sandbox';
-
+import { sandbox } from './utils.ts';
 import deno from '../deno.json' with { type: 'json' };
 import { NotGitDirectoryError } from '../src/errors.ts';
 import { GITHOOKS_UNDERSCORED_DIRNAME } from '../src/constants.ts';
@@ -93,23 +92,20 @@ Deno.test({
 		run: true,
 	},
 	async fn() {
-		await using sbox = await sandbox();
-
-		try {
+		await sandbox(async (cwd) => {
 			try {
 				await githooks(localBinPath, 'init');
 			} catch (err) {
 				expect(err).toBeInstanceOf(NotGitDirectoryError);
+				if (!(err instanceof NotGitDirectoryError)) throw err;
 			}
 
 			await new Deno.Command('git', { args: ['init'] }).output();
 			const { success, stderr } = await githooks(localBinPath, 'init');
 			if (!success) throw new Error(textDecoder.decode(stderr));
-			const lstat = await Deno.lstat(pathPosix.join(Deno.cwd(), GITHOOKS_UNDERSCORED_DIRNAME));
+			const lstat = await Deno.lstat(pathPosix.join(cwd, GITHOOKS_UNDERSCORED_DIRNAME));
 			expect(lstat.isDirectory).toBe(true);
-		} finally {
-			await sbox[Symbol.asyncDispose]();
-		}
+		});
 	},
 });
 
@@ -121,22 +117,19 @@ Deno.test({
 		run: true,
 	},
 	async fn() {
-		await using sbox = await sandbox();
-
-		try {
+		await sandbox(async (cwd) => {
 			try {
 				await githooks(remoteBinPath, 'init');
 			} catch (err) {
 				expect(err).toBeInstanceOf(NotGitDirectoryError);
+				if (!(err instanceof NotGitDirectoryError)) throw err;
 			}
 
 			await new Deno.Command('git', { args: ['init'] }).output();
 			const { success, stderr } = await githooks(remoteBinPath, 'init');
 			if (!success) throw new Error(textDecoder.decode(stderr));
-			const lstat = await Deno.lstat(pathPosix.join(Deno.cwd(), GITHOOKS_UNDERSCORED_DIRNAME));
+			const lstat = await Deno.lstat(pathPosix.join(cwd, GITHOOKS_UNDERSCORED_DIRNAME));
 			expect(lstat.isDirectory).toBe(true);
-		} finally {
-			await sbox[Symbol.asyncDispose]();
-		}
+		});
 	},
 });

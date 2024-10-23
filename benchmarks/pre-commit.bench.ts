@@ -1,21 +1,14 @@
 import * as path from 'jsr:@std/path/posix';
 
-import {
-	commit,
-	githooksInit,
-	huskyInit,
-	initDenoAndGit,
-	sandbox,
-	writeAndStageCode,
-} from './utils.ts';
+import { commit, githooksInit, huskyInit, initDenoAndGit } from './utils.ts';
+import { sandbox, writeAndStageCode } from '../tests/utils.ts';
+import { GITHOOKS_DIRNAME } from '../src/constants.ts';
 
 const GROUP = 'pre-commit (runtime)';
 
 function wrap(hookDirname: string, fn: (cwd: string) => Promise<void>) {
-	return sandbox(async () => {
-		const cwd = Deno.cwd();
-
-		await Promise.all([initDenoAndGit(cwd, true), writeAndStageCode(cwd)]);
+	return sandbox(async (cwd) => {
+		await Promise.all([initDenoAndGit(cwd), writeAndStageCode(cwd)]);
 
 		// write pre-commit hook
 		const huskyDir = path.join(cwd, hookDirname);
@@ -40,7 +33,7 @@ Deno.bench('npm:husky', { group: GROUP, baseline: true }, async (b) => {
 
 // jsr:@vnphanquang/githooks
 Deno.bench('jsr:@vnphanquang/githooks', { group: GROUP }, async (b) => {
-	await wrap('.githooks', async (cwd) => {
+	await wrap(GITHOOKS_DIRNAME, async (cwd) => {
 		await githooksInit();
 
 		b.start();

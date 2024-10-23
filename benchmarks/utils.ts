@@ -1,44 +1,10 @@
-import * as path from 'jsr:@std/path/posix';
-
-import { sandbox as createSandbox } from 'jsr:@lambdalisue/sandbox';
 import { git } from '../src/git.ts';
+import { initGit } from '../tests/utils.ts';
 
-export async function sandbox(fn: () => void | Promise<void>) {
-	const sbox = await createSandbox();
-	try {
-		await fn();
-	} finally {
-		await sbox[Symbol.asyncDispose]();
-	}
-}
-
-export async function initDenoAndGit(cwd: string, gitConfig: boolean = false) {
+export async function initDenoAndGit(cwd: string) {
 	// deno init
-	await Promise.all([
-		new Deno.Command('deno', {
-			args: ['init'],
-		}).output(),
-		// git init
-		git(cwd, 'init').output(),
-	]);
-
-	// git config
-	if (gitConfig) {
-		await Promise.all([
-			git(cwd, 'config', 'user.email', 'tester@example.com').output(),
-			git(cwd, 'config', 'user.name', 'Deno Tester').output(),
-			git(cwd, 'config', 'commit.gpgsign', 'false').output(),
-		]);
-	}
-}
-
-export async function writeAndStageCode(rootDir: string) {
-	// write
-	const sourcePath = path.join(rootDir, 'main.ts');
-	await Deno.writeTextFile(sourcePath, 'console.log("hello")');
-
-	// add
-	await git(rootDir, 'add', sourcePath).output();
+	await new Deno.Command('deno', { args: ['init'] }).output();
+	await initGit(cwd, true);
 }
 
 export async function commit(rootDir: string, message: string = 'test') {
