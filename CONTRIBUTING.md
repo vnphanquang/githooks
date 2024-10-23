@@ -26,9 +26,6 @@ If you have an idea and don't know where to start yet, consider [opening a discu
 | ------ | ------- |
 | [Deno] | ^2.0.0  |
 
-[deno]: https://deno.com/
-[conventionalcommits]: https://www.conventionalcommits.org/en/v1.0.0/
-
 ## Code standard
 
 > [!IMPORTANT]
@@ -65,3 +62,5 @@ To bypass hook (not recommended, for admin only), run `git commit` with the `--n
 [github.issues.open]: https://github.com/vnphanquang/githooks/issues?q=is%3Aissue+is%3Aopen
 [github.discussions]: https://github.com/vnphanquang/githooks/discussions
 [lint-staged]: https://github.com/okonet/lint-staged
+[deno]: https://deno.com/
+[conventionalcommits]: https://www.conventionalcommits.org/en/v1.0.0/
