@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.5
+
+### Patch Changes
+
+- [`bd187b9`](https://github.com/vnphanquang/githooks/commit/bd187b9405a646793c4e3777eca49c0cc521e7e1) Thanks [@vnphanquang](https://github.com/vnphanquang)! - remove benchmark info from root README, might be flawed
+
 ## 1.0.4
 
 ### Patch Changes
