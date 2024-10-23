@@ -188,6 +188,7 @@ Other projects with similar objective exists. Please show them some love too.
 
 - [Yakiyo/deno_hooks](https://github.com/Yakiyo/deno_hooks): also inspired by [husky], written in Deno 1; no tests have been implemented as of this writing.
 - [xCykrix/githooked](https://github.com/xCykrix/githooked): also inspired by [husky], [originally written in Deno](https://www.reddit.com/r/Deno/comments/thfub7/githooked_the_deno_githook_handler_for_your/) but has likely been migrated away from Deno towards a standalone shell script, which is probably the most lightweight & cross-platform solution.
+- [lefthook](https://github.com/evilmartians/lefthook): a more complex Go-based git hooks manager
 
 ## Contributing
 
