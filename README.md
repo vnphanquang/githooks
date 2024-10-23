@@ -168,7 +168,7 @@ deno run -A npm:husky
 
 This project builds upon ideas from `husky` while trying to stay minimal and only extend on some functionality that satisfies my personal needs. It is also an attempt to utilize Deno for more explicit permissions and idiomatic testing (`husky` uses `bash` for tests, which is totally fine but simply not my preference).
 
-Regarding performance, both `npm:husky` and `jsr:@vnphanquang/githooks` are comparable:
+Regarding performance, both init scripts of `npm:husky` and `jsr:@vnphanquang/githooks` are comparable:
 
 - `npm:husky init` tends to run **~1.03x faster on linux** compared to `jsr:@vnphanquang/githooks`
 - `npm:husky init` tends to run **~1.10x slower on macos** compared to `jsr:@vnphanquang/githooks`
