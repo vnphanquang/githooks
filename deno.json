@@ -28,7 +28,7 @@
 		"compile:linux:arm64": "TARGET=aarch64-unknown-linux-gnu deno task compile ",
 		"changesets": "deno run -A npm:@changesets/cli",
 		"ci:compile": "deno task compile:windows & deno task compile:macos:x86_64 & deno task compile:macos:arm64 & deno task compile:linux:x86_64 & deno task compile:linux:arm64",
-		"ci:test": "deno test -A --clean --coverage=coverage",
+		"ci:test": "deno test -A --clean --coverage=coverage --include=src",
 		"ci:coverage": "deno coverage --lcov --output=./coverage.lcov coverage",
 		"ci:changesets:version": "deno run -A npm:@changesets/cli version",
 		"ci:changesets:publish": "deno publish && deno run -A npm:@changesets/cli publish"
