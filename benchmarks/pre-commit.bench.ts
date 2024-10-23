@@ -1,30 +1,44 @@
-import * as path from 'jsr:@std/path/posix';
-
-import { commit, githooksInit, huskyInit, initDenoAndGit } from './utils.ts';
+import {
+	commit,
+	denoAddGithooks,
+	denoAddHusky,
+	denoAddLefthook,
+	githooksInit,
+	huskyInit,
+	initDenoAndGit,
+	lefthookInit,
+} from './utils.ts';
 import { sandbox, writeAndStageCode } from '../tests/utils.ts';
-import { GITHOOKS_DIRNAME } from '../src/constants.ts';
 
-const GROUP = 'pre-commit (runtime)';
+const GROUP = 'pre-commit';
 
-function wrap(hookDirname: string, fn: (cwd: string) => Promise<void>) {
+function wrap(fn: (cwd: string) => Promise<void>) {
 	return sandbox(async (cwd) => {
-		await Promise.all([initDenoAndGit(cwd), writeAndStageCode(cwd)]);
-
-		// write pre-commit hook
-		const huskyDir = path.join(cwd, hookDirname);
-		const preCommitHookPath = path.join(huskyDir, 'pre-commit');
-		await Deno.mkdir(huskyDir, { recursive: true });
-		await Deno.writeTextFile(preCommitHookPath, 'deno lint');
-
+		// git init, deno init
+		await initDenoAndGit(cwd);
+		// write some code and run `git add`
+		await writeAndStageCode(cwd);
+		// actual benchmark
 		await fn(cwd);
 	});
 }
 
 // npm:husky
-Deno.bench('npm:husky', { group: GROUP, baseline: true }, async (b) => {
-	await wrap('.husky', async (cwd) => {
+Deno.bench('npm:husky', { group: GROUP }, async (b) => {
+	await wrap(async (cwd) => {
+		await denoAddHusky(cwd, true);
 		await huskyInit();
+		b.start();
+		await commit(cwd);
+		b.end();
+	});
+});
 
+// npm:lefthook
+Deno.bench('npm:lefthook', { group: GROUP }, async (b) => {
+	await wrap(async (cwd) => {
+		await denoAddLefthook(cwd);
+		await lefthookInit();
 		b.start();
 		await commit(cwd);
 		b.end();
@@ -32,10 +46,10 @@ Deno.bench('npm:husky', { group: GROUP, baseline: true }, async (b) => {
 });
 
 // jsr:@vnphanquang/githooks
-Deno.bench('jsr:@vnphanquang/githooks', { group: GROUP }, async (b) => {
-	await wrap(GITHOOKS_DIRNAME, async (cwd) => {
+Deno.bench('jsr:@vnphanquang/githooks', { group: GROUP, baseline: true }, async (b) => {
+	await wrap(async (cwd) => {
+		await denoAddGithooks(cwd, true);
 		await githooksInit();
-
 		b.start();
 		await commit(cwd);
 		b.end();
