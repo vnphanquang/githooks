@@ -1,6 +1,6 @@
 {
 	"name": "@vnphanquang/githooks",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"exports": {
 		".": "./src/mod.ts",
 		"./bin": "./src/bin.ts",
