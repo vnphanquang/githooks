@@ -168,14 +168,14 @@ deno run -A npm:husky
 
 This project builds upon ideas from `husky` while trying to stay minimal and only extend on some functionality that satisfies my personal needs. It is also an attempt to utilize Deno for more explicit permissions and idiomatic testing (`husky` uses `bash` for tests, which is totally fine but simply not my preference).
 
-<!-- Regarding performance, `jsr:@vnphanquang/githooks` is relatively faster compared to `npm:husky` in the [latest benchmarks](https://github.com/vnphanquang/githooks/actions/workflows/benchmark.yaml). You can try the benchmark on your own machine by cloning the project and running: -->
-<!---->
-<!-- ```bash -->
-<!-- deno task bench -->
-<!-- ``` -->
-<!---->
-<!-- > [!IMPORTANT] -->
-<!-- > Benchmarks can be flawed. I encourage you to inspect them at [benchmarks/*](https://github.com/vnphanquang/githooks/tree/main/benchmarks). Feedback is welcome. -->
+Regarding performance, `jsr:@vnphanquang/githooks` is relatively faster compared to `npm:husky` in the [latest benchmarks](https://github.com/vnphanquang/githooks/actions/workflows/benchmark.yaml). You can try the benchmark on your own machine by cloning the project and running:
+
+```bash
+deno task bench
+```
+
+> [!IMPORTANT]
+> Benchmarks can be flawed. I encourage you to inspect them at [benchmarks/*](https://github.com/vnphanquang/githooks/tree/main/benchmarks). Feedback is welcome.
 
 ### Similar Projects
 
