@@ -197,7 +197,7 @@ See [CONTRIBUTING](https://github.com/vnphanquang/githooks/blob/main/CONTRIBUTIN
 [jsr.package]: https://jsr.io/@vnphanquang/githooks
 [jsr.package.docs]: https://jsr.io/@vnphanquang/githooks/docs
 [codecov]: https://codecov.io/github/vnphanquang/githooks
-[codecov.badge]: https://codecov.io/github/vnphanquang/githooks/graph/badge.svg?token=dKkYUy4evr
+[codecov.badge]: https://codecov.io/github/vnphanquang/githooks/graph/badge.svg
 [license.badge]: https://img.shields.io/badge/license-MIT-blue.svg
 [license]: https://github.com/vnphanquang/githooks/blob/main/LICENSE
 [lint-staged]: https://github.com/lint-staged/lint-staged
